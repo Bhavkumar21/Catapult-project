@@ -21,18 +21,25 @@ class CustomDataset(Dataset):
 def compute_relu_quadratic(X, A):
     return np.array([x.T @ A @ x for x in X])
 
+# def compute_relu_quadratic(X, A):
+#     return np.max(0,np.array([x.T @ A @ x for x in X]))
+
+def create_A(input_dim, type):
+  if type == 'hd':
+      A = generate_highrank_matrix(dim=input_dim, target_condition=1, sparsity=0.01)
+  elif type == 'hs':
+      A = generate_highrank_matrix(dim=input_dim, target_condition=1, sparsity=0.9)
+      
+  elif type == 'ld':
+      A = generate_lowrank_matrix(input_dim, 3, 0.01)
+  else:
+      A = np.zeros((input_dim, input_dim), dtype=int)
+      A[0, 0] = 1
+      A[1, 1] = 1
+  return A
+
 def generate_data(num_samples, input_dim, type='ls'):
-    if type == 'hd':
-        A = generate_highrank_matrix(dim=input_dim, target_condition=1, sparsity=0.01)
-    elif type == 'hs':
-        A = generate_highrank_matrix(dim=input_dim, target_condition=1, sparsity=0.9)
-        
-    elif type == 'ld':
-        A = generate_lowrank_matrix(input_dim, 3, 0.01)
-    else:
-        A = np.zeros((input_dim, input_dim), dtype=int)
-        A[0, 0] = 1
-        A[1, 1] = 1
+    A = create_A(input_dim, type)
     
     X_data = np.random.randn(num_samples, input_dim)
     y_data = compute_relu_quadratic(X_data, A)

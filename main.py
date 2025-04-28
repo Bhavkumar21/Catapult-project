@@ -12,7 +12,7 @@ torch.manual_seed(23)
 
 INPUT_DIM = 100
 NUM_SAMPLES = 1000
-TYPE = 'ld'
+TYPE = 'ls'
 
 def experiment1():
   print("Generating Dataset...")
