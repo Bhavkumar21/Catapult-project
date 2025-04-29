@@ -203,14 +203,89 @@ def generate_viz_2(exp, ctrl, name='ls'):
 
 
 def add_annotation_4(ax, exp_val, ctrl_val, ctrl1_val, ctrl2_val, exp_color, ctrl_color, fmt):
-  """Add annotation to the plot."""
-  ax.text(1.05, 0.30, f'Larger Lr (b=16): {exp_val:{fmt}}', color=exp_color, ha='left', va='top', 
-          transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
-  ax.text(1.05, 0.23, f'Larger Lr (b=8): {ctrl_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
-          transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
-  ax.text(1.05, 0.16, f'Larger Lr (b=4): {ctrl1_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
-          transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
-  ax.text(1.05, 0.09, f'Larger Lr (b=2): {ctrl2_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
-          transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
+    ax.text(1.05, 0.30, f'Larger Lr: {exp_val:{fmt}}', color=exp_color, ha='left', va='top', 
+            transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
+    ax.text(1.05, 0.23, f'Small Lr + WD (0.001): {ctrl_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
+            transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
+    ax.text(1.05, 0.16, f'Small Lr + WD (0.01): {ctrl1_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
+            transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
+    ax.text(1.05, 0.09, f'Small Lr + WD (0.1): {ctrl2_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
+            transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
+    
+
+def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
+  colors = {'exp': '#1f77b4', 'ctrl': '#ff7f0e'}
+  line_styles = ['-', '--', ':']
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+
+  ax1.plot(exp['train_loss'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+
+  add_annotation_4(ax1, exp['train_loss'][-1], ctrl['train_loss'][-1], ctrl1['train_loss'][-1], ctrl2['train_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
+
+
+  ax1.set_title('Training Loss')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('MSE Loss')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+
+  plt.tight_layout()
+  plt.savefig(f"img/train-{name}-wd.png")
+  plt.show()
+
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+
+  add_annotation_4(ax1, exp['test_loss'][-1], ctrl['test_loss'][-1], ctrl1['test_loss'][-1], ctrl2['test_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
+  ax1.set_yscale('log') 
+  ax1.set_title('Test Loss (log scaled)')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('MSE Loss')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+  plt.tight_layout()
+  plt.savefig(f"img/test-{name}-wd.png")
+  plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['frobenius_norms'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['frobenius_norms'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['frobenius_norms'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['frobenius_norms'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+  add_annotation_4(ax1, exp['frobenius_norms'][-1], ctrl['frobenius_norms'][-1], ctrl1['frobenius_norms'][-1], ctrl2['frobenius_norms'][-1], colors['exp'], colors['ctrl'], '.2e')
+  ax1.set_title('Frobenius Norm of Weight 1 Matrix')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Frobenius Norm Value')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+
+  plt.tight_layout()
+  plt.savefig(f"img/norm-{name}-wd.png")
+  plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['W1WT_rank'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['W1WT_rank'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['W1WT_rank'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+  add_annotation_4(ax1, exp['W1WT_rank'][-1], ctrl['W1WT_rank'][-1], ctrl1['W1WT_rank'][-1], ctrl2['W1WT_rank'][-1], colors['exp'], colors['ctrl'], '.2e')
+  ax1.set_title('Effective Rank of Weight 1 Matrix')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Effective Rank')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+
+  plt.tight_layout()
+  plt.savefig(f"img/rank-{name}-wd.png")
+  plt.show()
+
+  print("Finished Generating Visaulizations...")
 
 
