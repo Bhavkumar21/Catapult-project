@@ -9,11 +9,11 @@ from utils import compute_ranks
 np.random.seed(23)
 torch.manual_seed(23)
 
-INPUT_DIM = 100
+INPUT_DIM = 20
 
 class NN_TOY(nn.Module):
   """Simple two-layer neural network with ReLU activation."""
-  def __init__(self, input_dim=INPUT_DIM, hidden_dim=64):
+  def __init__(self, input_dim=INPUT_DIM, hidden_dim=256):
       super().__init__()
       self.fc1 = nn.Linear(input_dim, hidden_dim, bias=False)
       self.act1 = nn.ReLU() 
@@ -37,7 +37,7 @@ def train_model(train_dataset, test_dataset, lr, epochs, weight_decay=0.00):
   metrics = {
       'train_loss': [],
       'test_loss': [],
-      'top_svs': np.zeros((epochs * len(train_loader), 64)),
+      'top_svs': np.zeros((epochs * len(train_loader), 20)),
       'W1WT_rank':[],
       'frobenius_norms': [],
   }

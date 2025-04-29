@@ -29,7 +29,7 @@ def compute_ranks(matrix):
   operator_norm = np.max(s)
   return nuclear_norm / operator_norm
 
-def generate_highrank_matrix(dim=1000, target_condition=10, sparsity=0.1):
+def generate_highrank_matrix(dim=1000, target_condition=1, sparsity=0.1):
   """Generate a high rank matrix with controlled condition number and sparsity."""
   # Create random orthogonal matrices
   Q1, _ = np.linalg.qr(np.random.randn(dim, dim))
