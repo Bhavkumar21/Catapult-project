@@ -146,13 +146,14 @@ def generate_viz_2(exp, ctrl, name='ls'):
   small_lr_colors = ['#a63603', '#e6550d', '#fd8d3c']  # More saturated oranges
   line_styles = ['-', '--', ':']
   ax = plt.subplot(gs[0, 0])
-  for i in range(10):
-      ax.plot(exp['top_svs'][:, i], 
+  for i in range(3):
+      ax.plot(exp['top_svs'][:40, i], 
               color=large_lr_colors[i%3],
               linestyle=line_styles[i%3],
               linewidth=lw,
               alpha=0.9,
               label=f'large lr σ_{i+1}')
+      
   # for i in range(3):
   #     ax.plot(ctrl['top_svs'][:, i], 
   #             color=small_lr_colors[i],
@@ -160,7 +161,10 @@ def generate_viz_2(exp, ctrl, name='ls'):
   #             linewidth=lw,
   #             alpha=1.0,
   #             label=f'small lr σ_{i+1}')
-
+      
+  # for i in range(20):
+  #    print('top svs', i, exp['top_svs'][:40, i])
+  
   ax.set_title('Largest Singular Values of W1', fontsize=16)
   ax.set_ylabel('Singular Values (W1)', fontsize=14)
   ax.set_xlabel('Training Iterations', fontsize=14)
@@ -284,213 +288,6 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
 
   plt.tight_layout()
   plt.savefig(f"img/rank-{name}-wd.png")
-  plt.show()
-
-  print("Finished Generating Visaulizations...")
-
-
-def generate_viz_mnist(exp, ctrl, name='mnist'):
-  colors = {'exp': '#1f77b4', 'ctrl': '#ff7f0e'}
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['train_loss'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['train_loss'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['train_loss'][-1], ctrl['train_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Training Loss')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('MSE Loss')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/train-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['test_loss'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['test_loss'][-1], ctrl['test_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_yscale('log') 
-  ax1.set_title('Test Loss (log scaled)')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('MSE Loss')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/test-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['frobenius_norm1'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['frobenius_norm1'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['frobenius_norm1'][-1], ctrl['frobenius_norm1'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Frobenius Norm of Weight 1 Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Frobenius Norm Value')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/norm1-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['frobenius_norm2'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['frobenius_norm2'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['frobenius_norm2'][-1], ctrl['frobenius_norm2'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Frobenius Norm of Weight 2 Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Frobenius Norm Value')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/norm2-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  # fig, ax1 = plt.subplots(figsize=(10, 6))
-  # ax1.plot(exp['frobenius_norm3'], color=colors['exp'], label='Larger Lr')
-  # ax1.plot(ctrl['frobenius_norm3'], color=colors['ctrl'], label='Small Lr')
-  # add_annotation_2(ax1, exp['frobenius_norm3'][-1], ctrl['frobenius_norm3'][-1],colors['exp'], colors['ctrl'], '.2e')
-  # ax1.set_title('Frobenius Norm of Weight 3 Matrix')
-  # ax1.set_xlabel('Training Iterations')
-  # ax1.set_ylabel('Frobenius Norm Value')
-  # ax1.legend(loc='upper right')
-  # ax1.grid(True, alpha=0.3)
-
-  # plt.savefig(f"img/norm3-{name}.png")
-  # plt.tight_layout()
-  # plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['W1WT_rank'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['W1WT_rank'][-1], ctrl['W1WT_rank'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Effective Rank of Weight 1 Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Effective Rank')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/rank1-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['W2WT_rank'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['W2WT_rank'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['W2WT_rank'][-1], ctrl['W2WT_rank'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Effective Rank of Weight 2 Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Effective Rank')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/rank2-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  # fig, ax1 = plt.subplots(figsize=(10, 6))
-  # ax1.plot(exp['W3WT_rank'], color=colors['exp'], label='Larger Lr')
-  # ax1.plot(ctrl['W3WT_rank'], color=colors['ctrl'], label='Small Lr')
-  # add_annotation_2(ax1, exp['W3WT_rank'][-1], ctrl['W3WT_rank'][-1],colors['exp'], colors['ctrl'], '.2e')
-  # ax1.set_title('Effective Rank of Weight 3 Matrix')
-  # ax1.set_xlabel('Training Iterations')
-  # ax1.set_ylabel('Effective Rank')
-  # ax1.legend(loc='upper right')
-  # ax1.grid(True, alpha=0.3)
-
-  # plt.savefig(f"img/rank3-{name}.png")
-  # plt.tight_layout()
-  # plt.show()
-  print("Finished Generating Visaulizations...")
-
-
-def generate_viz_cifar(exp, ctrl, name='cifar10'):
-  colors = {'exp': '#1f77b4', 'ctrl': '#ff7f0e'}
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['train_loss'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['train_loss'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['train_loss'][-1], ctrl['train_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Training Loss')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('MSE Loss')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/train-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['test_loss'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['test_loss'][-1], ctrl['test_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_yscale('log') 
-  ax1.set_title('Test Loss (log scaled)')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('MSE Loss')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/test-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['frobenius_conv_norm'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['frobenius_conv_norm'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['frobenius_conv_norm'][-1], ctrl['frobenius_conv_norm'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Frobenius Norm of Convolution Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Frobenius Norm Value')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/norm-conv-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['frobenius_fc_norm'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['frobenius_fc_norm'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['frobenius_fc_norm'][-1], ctrl['frobenius_fc_norm'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Frobenius Norm of FC Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Frobenius Norm Value')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/norm-fc-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['WWT_fc_rank'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['WWT_fc_rank'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['WWT_fc_rank'][-1], ctrl['WWT_fc_rank'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Effective Rank of Weight FC Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Effective Rank')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/rank-fc-{name}.png")
-  plt.tight_layout()
-  plt.show()
-
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['WWT_conv_rank'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['WWT_conv_rank'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['WWT_conv_rank'][-1], ctrl['WWT_conv_rank'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Effective Rank of Weight Conv Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Effective Rank')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
-
-  plt.savefig(f"img/rank-conv-{name}.png")
-  plt.tight_layout()
   plt.show()
 
   print("Finished Generating Visaulizations...")
