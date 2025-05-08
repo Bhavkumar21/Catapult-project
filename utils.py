@@ -117,14 +117,14 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.plot(ctrl['train_loss'], color=colors['ctrl'], label='Small Lr')
   add_annotation_2(ax1, exp['train_loss'][-1], ctrl['train_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
   ax1.set_title('Training Loss')
-  ax1.set_xlabel('Training Iterations')
+  ax1.set_xlabel('Epoch')
   ax1.set_ylabel('MSE Loss')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img/train-{name}.png")
+  plt.savefig(f"final_img_imb/train-{name}.png")
   plt.tight_layout()
-  plt.show()
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
@@ -132,50 +132,14 @@ def generate_viz_2(exp, ctrl, name='ls'):
   add_annotation_2(ax1, exp['test_loss'][-1], ctrl['test_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
   ax1.set_yscale('log') 
   ax1.set_title('Test Loss (log scaled)')
-  ax1.set_xlabel('Training Iterations')
+  ax1.set_xlabel('Epoch')
   ax1.set_ylabel('MSE Loss')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img/test-{name}.png")
+  plt.savefig(f"final_img_imb/test-{name}.png")
   plt.tight_layout()
-  plt.show()
-
-  plt.figure(figsize=(15, 8))
-  gs = GridSpec(1, 1)
-  lw = 2.5
-  large_lr_colors = ['#08519c', '#3182bd', '#6baed6']  # More saturated blues
-  small_lr_colors = ['#a63603', '#e6550d', '#fd8d3c']  # More saturated oranges
-  line_styles = ['-', '--', ':']
-  ax = plt.subplot(gs[0, 0])
-  for i in range(3):
-      ax.plot(exp['top_svs'][:40, i], 
-              color=large_lr_colors[i%3],
-              linestyle=line_styles[i%3],
-              linewidth=lw,
-              alpha=0.9,
-              label=f'large lr σ_{i+1}')
-      
-  # for i in range(3):
-  #     ax.plot(ctrl['top_svs'][:, i], 
-  #             color=small_lr_colors[i],
-  #             linestyle=line_styles[i],
-  #             linewidth=lw,
-  #             alpha=1.0,
-  #             label=f'small lr σ_{i+1}')
-      
-  # for i in range(20):
-  #    print('top svs', i, exp['top_svs'][:40, i])
-  
-  ax.set_title('Largest Singular Values of W1', fontsize=16)
-  ax.set_ylabel('Singular Values (W1)', fontsize=14)
-  ax.set_xlabel('Training Iterations', fontsize=14)
-  # ax.legend(loc='upper right')
-  ax.grid(True, alpha=0.3) 
-
-  plt.savefig(f"img/svs-{name}.png")
-  plt.tight_layout()
-  plt.show()
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['frobenius_norms'], color=colors['exp'], label='Larger Lr')
@@ -187,9 +151,9 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img/norm-{name}.png")
+  plt.savefig(f"final_img_imb/norm-{name}.png")
   plt.tight_layout()
-  plt.show()
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
@@ -201,9 +165,36 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img/rank-{name}.png")
+  plt.savefig(f"final_img_imb/rank-{name}.png")
   plt.tight_layout()
-  plt.show()
+  # plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['norm_ratios'], color=colors['exp'], label='Large LR')
+  ax1.plot(ctrl['norm_ratios'], color=colors['ctrl'], label='Small LR')
+  ax1.set_title('Weight Norm Ratio (||W1||/||W2||)')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Norm Ratio')
+  add_annotation_2(ax1, exp['norm_ratios'][-1], ctrl['norm_ratios'][-1], colors['exp'], colors['ctrl'], '.2e')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+  plt.savefig(f"final_img_imb/norm_ratio-{name}.png")
+  plt.tight_layout()
+  # plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['similarity_e1_v1'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr')
+  add_annotation_2(ax1, exp['similarity_e1_v1'][-1], ctrl['similarity_e1_v1'][-1],colors['exp'], colors['ctrl'], '.2e')
+  ax1.set_title('Cosine Similarity of Train Data & Weight Matrix')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Cosine Similarity')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+
+  plt.savefig(f"final_img_imb/cos-{name}.png")
+  plt.tight_layout()
+  # plt.show()
 
   print("Finished Generating Visaulizations...")
 
@@ -218,47 +209,40 @@ def add_annotation_4(ax, exp_val, ctrl_val, ctrl1_val, ctrl2_val, exp_color, ctr
     ax.text(1.05, 0.09, f'Small Lr + WD (0.1): {ctrl2_val:{fmt}}', color=ctrl_color, ha='left', va='top', 
             transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.5))
     
-
 def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   colors = {'exp': '#1f77b4', 'ctrl': '#ff7f0e'}
   line_styles = ['-', '--', ':']
   fig, ax1 = plt.subplots(figsize=(10, 6))
-
   ax1.plot(exp['train_loss'], color=colors['exp'], label='Larger Lr')
   ax1.plot(ctrl['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
   ax1.plot(ctrl1['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
   ax1.plot(ctrl2['train_loss'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
-
   add_annotation_4(ax1, exp['train_loss'][-1], ctrl['train_loss'][-1], ctrl1['train_loss'][-1], ctrl2['train_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
-
-
   ax1.set_title('Training Loss')
-  ax1.set_xlabel('Training Iterations')
+  ax1.set_xlabel('Epoch')
   ax1.set_ylabel('MSE Loss')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
   plt.tight_layout()
-  plt.savefig(f"img/train-{name}-wd.png")
-  plt.show()
-
+  plt.savefig(f"final_img_imb_wd/train-{name}.png")
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
   ax1.plot(ctrl['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
   ax1.plot(ctrl1['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
   ax1.plot(ctrl2['test_loss'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
-
   add_annotation_4(ax1, exp['test_loss'][-1], ctrl['test_loss'][-1], ctrl1['test_loss'][-1], ctrl2['test_loss'][-1], colors['exp'], colors['ctrl'], '.2e')
   ax1.set_yscale('log') 
   ax1.set_title('Test Loss (log scaled)')
-  ax1.set_xlabel('Training Iterations')
+  ax1.set_xlabel('Epoch')
   ax1.set_ylabel('MSE Loss')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
   plt.tight_layout()
-  plt.savefig(f"img/test-{name}-wd.png")
-  plt.show()
+  plt.savefig(f"final_img_imb_wd/test-{name}.png")
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['frobenius_norms'], color=colors['exp'], label='Larger Lr')
@@ -273,8 +257,8 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   ax1.grid(True, alpha=0.3)
 
   plt.tight_layout()
-  plt.savefig(f"img/norm-{name}-wd.png")
-  plt.show()
+  plt.savefig(f"final_img_imb_wd/norm-{name}.png")
+  # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
@@ -287,9 +271,38 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   ax1.set_ylabel('Effective Rank')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
-
   plt.tight_layout()
-  plt.savefig(f"img/rank-{name}-wd.png")
-  plt.show()
+  plt.savefig(f"final_img_imb_wd/rank-{name}.png")
+  # plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['norm_ratios'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['norm_ratios'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['norm_ratios'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['norm_ratios'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+  add_annotation_4(ax1, exp['norm_ratios'][-1], ctrl['norm_ratios'][-1], ctrl1['norm_ratios'][-1], ctrl2['norm_ratios'][-1], colors['exp'], colors['ctrl'], '.2e')
+  ax1.set_title('Weight Norm Ratio (||W1||/||W2||)')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Norm Ratio')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+  plt.tight_layout()
+  plt.savefig(f"final_img_imb_wd/norm_ratio-{name}.png")
+  # plt.show()
+
+  fig, ax1 = plt.subplots(figsize=(10, 6))
+  ax1.plot(exp['similarity_e1_v1'], color=colors['exp'], label='Larger Lr')
+  ax1.plot(ctrl['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr + WD (0.001)', linestyle=line_styles[0])
+  ax1.plot(ctrl1['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr + WD (0.01)', linestyle=line_styles[1])
+  ax1.plot(ctrl2['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr + WD (0.1)', linestyle=line_styles[2])
+  add_annotation_4(ax1, exp['similarity_e1_v1'][-1], ctrl['similarity_e1_v1'][-1], ctrl1['similarity_e1_v1'][-1], ctrl2['similarity_e1_v1'][-1], colors['exp'], colors['ctrl'], '.2e') 
+  ax1.set_title('Cosine Similarity of Train Data & Weight Matrix')
+  ax1.set_xlabel('Training Iterations')
+  ax1.set_ylabel('Cosine Similarity')
+  ax1.legend(loc='upper right')
+  ax1.grid(True, alpha=0.3)
+  plt.tight_layout()
+  plt.savefig(f"final_img_imb_wd/cos-{name}.png")
+  # plt.show()
 
   print("Finished Generating Visaulizations...")

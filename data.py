@@ -65,3 +65,26 @@ def generate_data(num_samples, input_dim, type='ls'):
 
     return train_dataset, test_dataset
 
+def generate_data_1dir(num_samples, input_dim):
+    A = np.zeros((input_dim, input_dim), dtype=int)
+    A[0, 0] = 1
+    
+    X_data = np.random.randn(num_samples, input_dim)
+    y_data = compute_relu_quadratic(X_data, A)
+
+    train_size = int(num_samples * 0.8)
+
+    X_train, X_test = X_data[:train_size], X_data[train_size:]
+    y_train, y_test = y_data[:train_size], y_data[train_size:]
+    
+    y_mean = np.mean(y_train, axis=0)
+    y_std = np.std(y_train, axis=0)
+    y_train = (y_train - y_mean) / y_std
+    y_test = (y_test - y_mean) / y_std
+
+    train_dataset = CustomDataset(X_train, y_train)
+    test_dataset = CustomDataset(X_test, y_test)
+
+    print("Finished Generating Dataset...")
+
+    return train_dataset, test_dataset
