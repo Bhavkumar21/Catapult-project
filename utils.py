@@ -7,8 +7,8 @@ from scipy.sparse import csr_matrix
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-np.random.seed(23)
-torch.manual_seed(23)
+np.random.seed(24)
+torch.manual_seed(24)
 
 def compute_ranks(matrix):
   """Compute effective rank of a matrix using nuclear norm / operator norm."""

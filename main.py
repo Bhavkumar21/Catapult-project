@@ -7,8 +7,8 @@ from data import generate_data
 from train import train_model
 from utils import generate_viz_2, generate_viz_4
 
-np.random.seed(23)
-torch.manual_seed(23)
+np.random.seed(24)
+torch.manual_seed(24)
 
 INPUT_DIM = 20
 NUM_SAMPLES = 500

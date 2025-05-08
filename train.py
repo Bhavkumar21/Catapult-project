@@ -11,8 +11,8 @@ DEVICE = "cpu"
 if torch.backends.mps.is_available():
     DEVICE = torch.device("mps")
 
-np.random.seed(23)
-torch.manual_seed(23)
+np.random.seed(24)
+torch.manual_seed(24)
 
 INPUT_DIM = 20
 

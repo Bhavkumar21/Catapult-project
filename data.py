@@ -4,8 +4,8 @@ from torchvision import datasets
 import numpy as np
 from utils import generate_highrank_matrix, generate_lowrank_matrix
 
-np.random.seed(23)
-torch.manual_seed(23)
+np.random.seed(24)
+torch.manual_seed(24)
 
 class CustomDataset(Dataset):
     """Custom dataset for handling the neural network input/output pairs."""
