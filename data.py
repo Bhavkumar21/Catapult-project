@@ -29,7 +29,7 @@ def create_A(input_dim, type):
       A = generate_highrank_matrix(dim=input_dim, target_condition=1, sparsity=0.9)
       
   elif type == 'ld':
-      A = generate_lowrank_matrix(input_dim, 3, 0.01)
+      A = generate_lowrank_matrix(input_dim, 3)
   else:
       A = np.zeros((input_dim, input_dim), dtype=int)
       A[0, 0] = 1

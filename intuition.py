@@ -388,12 +388,13 @@ def experiment2():
   generate_viz_4(exp, ctrl1, ctrl2, ctrl3, name=f'{TYPE}-wd')
 
 def experiment3():
-  for i in ['ls', 'ld', 'hd', 'hs']:
+  # for i in ['ls', 'ld', 'hd', 'hs']:
+    i = 'ld'
     print("Generating Dataset...")
     train_dataset, test_dataset = generate_data(NUM_SAMPLES, INPUT_DIM, type=i)
 
     print("Training Catapult Model...")
-    exp = train_model_intu(train_dataset, test_dataset, 0.1, 1500, weight_decay=0.00)
+    exp = train_model_intu(train_dataset, test_dataset, 0.11, 1500, weight_decay=0.00)
 
     print("Training Control Model...")
     ctrl = train_model_intu(train_dataset, test_dataset, 0.001, 1500, weight_decay=0.00)

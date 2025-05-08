@@ -76,31 +76,33 @@ def generate_highrank_matrix(dim=1000, target_condition=1, sparsity=0.1):
   
   return A_sparse
 
-def generate_lowrank_matrix(dim, target_rank, sparsity):
-  """Generate a low rank matrix with controlled rank and sparsity."""
-  # Create orthogonal basis for column space
-  U, _ = np.linalg.qr(np.random.randn(dim, target_rank))
+def generate_lowrank_matrix(dim, target_rank, sparsity=0):
+  # Step 1: Create factors that will give us a low rank matrix
+  # Using random normal matrices of appropriate dimensions
+  A_left = np.random.randn(dim, target_rank)
+  A_right = np.random.randn(target_rank, dim)
   
-  # Create sparse mask
-  sparse_mask = sparse_random(
-      dim, dim, density=sparsity, 
-      random_state=42
-  ).astype(bool).toarray()
+  # Step 2: Matrix multiplication to create the low rank matrix
+  # This ensures rank ≤ target_rank
+  A = np.dot(A_left, A_right)
   
-  # Construct matrix
-  A = U @ U.T  # Rank target_rank orthogonal projection
-  A = A * sparse_mask  # Apply sparsity
-
-  A = csr_matrix(A)
-  actual_cond = cond(A.toarray())
-  nnz = A.count_nonzero()
+  # Step 3: Add minimal noise to ensure numerical stability
+  # The small magnitude ensures we don't significantly affect the rank
+  noise = np.random.randn(dim, dim) * 1e-10
+  A += noise
+  
+  # Return as sparse matrix format for consistency
+  A_sparse = csr_matrix(A)
+  A_dense = A_sparse.toarray()
+  actual_cond = cond(A_dense)
+  nnz = np.count_nonzero(A_dense)
   
   print(f"Dimension: {A.shape}")
-  print(f"Effective rank: {compute_ranks(A.toarray())}")
+  print(f"Effective rank: {compute_ranks(A)}")  # Fixed: use A directly
   print(f"Condition number: {actual_cond:.2f}")
   print(f"Sparsity: {nnz/(dim*dim):.4f}")
   
-  return csr_matrix(A)
+  return A_sparse
 
 colors = {'exp': '#1f77b4', 'ctrl': '#ff7f0e'}
 def add_annotation_2(ax, exp_val, ctrl_val, exp_color, ctrl_color, fmt):
