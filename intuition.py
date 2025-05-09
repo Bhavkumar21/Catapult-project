@@ -23,14 +23,14 @@ def experiment1():
 
   print("Training Catapult Model...")
   # Final Test Loss: 0.222584, R²: 0.733668
-  exp = train_model(train_dataset, test_dataset, 0.1, 1700, weight_decay=0.00)
+  exp = train_model(train_dataset, test_dataset, 0.1, 100, weight_decay=0.00)
 
   print("Training Control Model...")
   # Past 1700 epochs we get an error 
   # "eigenvalues, eigenvectors = torch.linalg.eigh(W1WT): torch._C._LinAlgError: linalg.eigh: The algorithm failed to converge because the input matrix is ill-conditioned or has too many repeated eigenvalues (error code: 289)."
   # Our weight matrix becomes Ill conditioned and has too many repeated eigenvalues where eigendecoposition struggles to converge.
   # Final Test Loss: 0.237700, R²: 0.715581
-  ctrl = train_model(train_dataset, test_dataset, 0.001, 1700, weight_decay=0.00)
+  ctrl = train_model(train_dataset, test_dataset, 0.001, 100, weight_decay=0.00)
 
   print("Generating Visaulizations...")
   generate_viz_2(exp, ctrl, name=TYPE)
@@ -94,7 +94,7 @@ def experiment5():
     train_dataset, test_dataset = generate_data(NUM_SAMPLES, INPUT_DIM, type=i)
 
     print("Training Catapult Model...")
-    exp = train_model(train_dataset, test_dataset, 0.0015, 1500, weight_decay=0.00, imb=True)
+    exp = train_model(train_dataset, test_dataset, 0.002, 1500, weight_decay=0.00, imb=True)
 
     print("Training Control Model...")
     ctrl = train_model(train_dataset, test_dataset, 0.0001, 1500, weight_decay=0.00, imb=True)
@@ -103,12 +103,12 @@ def experiment5():
     generate_viz_2(exp, ctrl, name=f"imb-{i}")
 
 def experiment6():
-  for i in ['ls', 'ld', 'hd', 'hs']:
+  for i in ['hs']:
     print(f"Generating Dataset {i}...")
     train_dataset, test_dataset = generate_data(NUM_SAMPLES, INPUT_DIM, type=i)
 
     print("Training Catapult Model...")
-    exp = train_model(train_dataset, test_dataset, 0.0015, 1500, weight_decay=0.00, imb=True)
+    exp = train_model(train_dataset, test_dataset, 0.002, 1500, weight_decay=0.00, imb=True)
 
     print("Training WD 0.001 Model...")
     ctrl1 = train_model(train_dataset, test_dataset, 0.0001, 1500, weight_decay=0.001, imb=True)
@@ -123,5 +123,4 @@ def experiment6():
     generate_viz_4(exp, ctrl1, ctrl2, ctrl3, name=f'imb-{i}-wd')
 
 if __name__ == "__main__":
-  experiment5()
-  experiment6()
+  experiment1()

@@ -122,7 +122,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"final_img_imb/train-{name}.png")
+  plt.savefig(f"img_intu/train-{name}.png")
   plt.tight_layout()
   # plt.show()
 
@@ -137,7 +137,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"final_img_imb/test-{name}.png")
+  plt.savefig(f"img_intu/test-{name}.png")
   plt.tight_layout()
   # plt.show()
 
@@ -151,7 +151,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"final_img_imb/norm-{name}.png")
+  plt.savefig(f"img_intu/norm-{name}.png")
   plt.tight_layout()
   # plt.show()
 
@@ -165,7 +165,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"final_img_imb/rank-{name}.png")
+  plt.savefig(f"img_intu/rank-{name}.png")
   plt.tight_layout()
   # plt.show()
 
@@ -178,7 +178,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   add_annotation_2(ax1, exp['norm_ratios'][-1], ctrl['norm_ratios'][-1], colors['exp'], colors['ctrl'], '.2e')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
-  plt.savefig(f"final_img_imb/norm_ratio-{name}.png")
+  plt.savefig(f"img_intu/norm_ratio-{name}.png")
   plt.tight_layout()
   # plt.show()
 
@@ -192,7 +192,7 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"final_img_imb/cos-{name}.png")
+  plt.savefig(f"img_intu/cos-{name}.png")
   plt.tight_layout()
   # plt.show()
 
