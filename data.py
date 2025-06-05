@@ -68,6 +68,7 @@ def generate_data(num_samples, input_dim, type='ls'):
 def generate_data_1dir(num_samples, input_dim):
     A = np.zeros((input_dim, input_dim), dtype=int)
     A[0, 0] = 1
+    A[1, 1] = 1
     
     X_data = np.random.randn(num_samples, input_dim)
     y_data = compute_relu_quadratic(X_data, A)

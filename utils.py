@@ -29,6 +29,13 @@ def compute_ranks(matrix):
   operator_norm = np.max(s)
   return nuclear_norm / operator_norm
 
+def singular_value_entropy(singular_values):
+    """Compute singular value entropy using the formula H(σ) = -Σᵢ (σᵢ/||σ||₁) log(σᵢ/||σ||₁)"""
+    norm_1 = torch.sum(singular_values)
+    normalized_s = singular_values / norm_1
+    entropy = -torch.sum(normalized_s * torch.log(normalized_s))
+    return entropy.item()
+
 def generate_highrank_matrix(dim=1000, target_condition=1, sparsity=0.1):
   """Generate a high rank matrix with controlled condition number and sparsity."""
   # Create random orthogonal matrices
@@ -122,8 +129,22 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img_intu/train-{name}.png")
+  plt.savefig(f"new/train-{name}.png")
   plt.tight_layout()
+  plt.show()
+
+  # fig, ax1 = plt.subplots(figsize=(10, 6))
+  # ax1.plot(exp['svs'], color=colors['exp'], label='Larger Lr')
+  # ax1.plot(ctrl['svs'], color=colors['ctrl'], label='Small Lr')
+  # add_annotation_2(ax1, exp['svs'][-1], ctrl['svs'][-1], colors['exp'], colors['ctrl'], '.2e')
+  # ax1.set_title('Singular Value Entropy')
+  # ax1.set_xlabel('Epoch')
+  # ax1.set_ylabel('Singular Value Entropy')
+  # ax1.legend(loc='upper right')
+  # ax1.grid(True, alpha=0.3)
+
+  # plt.savefig(f"new/svs-{name}.png")
+  # plt.tight_layout()
   # plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -137,9 +158,9 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img_intu/test-{name}.png")
+  plt.savefig(f"new/test-{name}.png")
   plt.tight_layout()
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['frobenius_norms'], color=colors['exp'], label='Larger Lr')
@@ -151,9 +172,9 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img_intu/norm-{name}.png")
+  plt.savefig(f"new/norm-{name}.png")
   plt.tight_layout()
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
@@ -165,9 +186,9 @@ def generate_viz_2(exp, ctrl, name='ls'):
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img_intu/rank-{name}.png")
+  plt.savefig(f"new/rank-{name}.png")
   plt.tight_layout()
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['norm_ratios'], color=colors['exp'], label='Large LR')
@@ -178,23 +199,23 @@ def generate_viz_2(exp, ctrl, name='ls'):
   add_annotation_2(ax1, exp['norm_ratios'][-1], ctrl['norm_ratios'][-1], colors['exp'], colors['ctrl'], '.2e')
   ax1.legend(loc='upper right')
   ax1.grid(True, alpha=0.3)
-  plt.savefig(f"img_intu/norm_ratio-{name}.png")
+  plt.savefig(f"new/norm_ratio-{name}.png")
   plt.tight_layout()
-  # plt.show()
+  plt.show()
 
-  fig, ax1 = plt.subplots(figsize=(10, 6))
-  ax1.plot(exp['similarity_e1_v1'], color=colors['exp'], label='Larger Lr')
-  ax1.plot(ctrl['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr')
-  add_annotation_2(ax1, exp['similarity_e1_v1'][-1], ctrl['similarity_e1_v1'][-1],colors['exp'], colors['ctrl'], '.2e')
-  ax1.set_title('Cosine Similarity of Train Data & Weight Matrix')
-  ax1.set_xlabel('Training Iterations')
-  ax1.set_ylabel('Cosine Similarity')
-  ax1.legend(loc='upper right')
-  ax1.grid(True, alpha=0.3)
+  # fig, ax1 = plt.subplots(figsize=(10, 6))
+  # ax1.plot(exp['similarity_e1_v1'], color=colors['exp'], label='Larger Lr')
+  # ax1.plot(ctrl['similarity_e1_v1'], color=colors['ctrl'], label='Small Lr')
+  # add_annotation_2(ax1, exp['similarity_e1_v1'][-1], ctrl['similarity_e1_v1'][-1],colors['exp'], colors['ctrl'], '.2e')
+  # ax1.set_title('Cosine Similarity of Train Data & Weight Matrix')
+  # ax1.set_xlabel('Training Iterations')
+  # ax1.set_ylabel('Cosine Similarity')
+  # ax1.legend(loc='upper right')
+  # ax1.grid(True, alpha=0.3)
 
-  plt.savefig(f"img_intu/cos-{name}.png")
-  plt.tight_layout()
-  # plt.show()
+  # plt.savefig(f"final_img_wd/cos-{name}.png")
+  # plt.tight_layout()
+  # # plt.show()
 
   print("Finished Generating Visaulizations...")
 
@@ -226,7 +247,7 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
 
   plt.tight_layout()
   plt.savefig(f"final_img_imb_wd/train-{name}.png")
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['test_loss'], color=colors['exp'], label='Larger Lr')
@@ -242,7 +263,7 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   ax1.grid(True, alpha=0.3)
   plt.tight_layout()
   plt.savefig(f"final_img_imb_wd/test-{name}.png")
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['frobenius_norms'], color=colors['exp'], label='Larger Lr')
@@ -258,7 +279,7 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
 
   plt.tight_layout()
   plt.savefig(f"final_img_imb_wd/norm-{name}.png")
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['W1WT_rank'], color=colors['exp'], label='Larger Lr')
@@ -273,7 +294,7 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   ax1.grid(True, alpha=0.3)
   plt.tight_layout()
   plt.savefig(f"final_img_imb_wd/rank-{name}.png")
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['norm_ratios'], color=colors['exp'], label='Larger Lr')
@@ -288,7 +309,7 @@ def generate_viz_4(exp, ctrl, ctrl1, ctrl2, name='ls'):
   ax1.grid(True, alpha=0.3)
   plt.tight_layout()
   plt.savefig(f"final_img_imb_wd/norm_ratio-{name}.png")
-  # plt.show()
+  plt.show()
 
   fig, ax1 = plt.subplots(figsize=(10, 6))
   ax1.plot(exp['similarity_e1_v1'], color=colors['exp'], label='Larger Lr')

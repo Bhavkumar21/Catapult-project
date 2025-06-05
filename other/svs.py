@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svdvals
 
 
+
 INPUT_DIM = 20
 NUM_SAMPLES = 500
 
